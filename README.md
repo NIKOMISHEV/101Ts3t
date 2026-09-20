@@ -50,3 +50,19 @@ the challenge.
 
 Created by **Nikola Mishev**. First announced in September 2026.
 
+## Public proof and external timestamping
+
+The rules fixed before the invitation are in [TEST-SPECIFICATION.md](TEST-SPECIFICATION.md).
+After a real run receives a finalized `PASS`, an operator starts the public
+GitHub workflow with its Challenge ID. The workflow downloads the privacy-safe
+proof package from dothat.quest, rejects anything that is not a complete PASS,
+checks the public privacy boundary, and creates a GitHub/Sigstore attestation of
+the exact package. Public-repository attestations use Sigstore's public-good
+service and provide an independently checkable timestamp and repository
+identity.
+
+No synthetic, incomplete, failed or discovery-only run is anchored as a PASS.
+The workflow never creates an order or initiates a payment. It can only record a
+PASS that the production verifier has already finalized. Future anchored
+packages appear in [records/](records/).
+

@@ -1,0 +1,10 @@
+cff-version: 1.2.0
+title: "101Ts3t: Public Agentic Commerce Test"
+message: "If you reference this public test, please cite Nikola Mishev and the archived release associated with the record."
+type: software
+authors:
+  - family-names: Mishev
+    given-names: Nikola
+    orcid: "https://orcid.org/0009-0002-1063-6857"
+repository-code: "https://github.com/NIKOMISHEV/101Ts3t"
+url: "https://dothat.quest/"

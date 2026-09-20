@@ -1,0 +1,210 @@
+name: Anchor a finalized PASS proof
+
+on:
+  workflow_dispatch:
+    inputs:
+      challenge_id:
+        description: Finalized dothat.quest Challenge ID
+        required: true
+        type: string
+
+concurrency:
+  group: anchor-finalized-pass-records
+  cancel-in-progress: false
+
+jobs:
+  anchor:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    env:
+      API_BASE: https://api.dothat.quest
+      PREDICATE_TYPE: https://dothat.quest/attestations/verified-agentic-commerce/v1
+      CHALLENGE_ID: ${{ inputs.challenge_id }}
+    steps:
+      - name: Check out the public record repository
+        uses: actions/checkout@v4
+
+      - name: Validate the requested record
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [[ ! "$CHALLENGE_ID" =~ ^qst_[a-f0-9]{32}$ ]]; then
+            echo "Invalid Challenge ID" >&2
+            exit 1
+          fi
+          if [[ -e "records/$CHALLENGE_ID" ]]; then
+            echo "This Challenge ID is already anchored" >&2
+            exit 1
+          fi
+
+      - name: Fetch the finalized public proof package
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p "$RUNNER_TEMP/dothat-anchor"
+          curl --fail-with-body --silent --show-error \
+            --proto '=https' --tlsv1.2 --connect-timeout 10 --max-time 30 \
+            --header 'Accept: application/json' \
+            --output "$RUNNER_TEMP/dothat-anchor/proof.json" \
+            "$API_BASE/api/proofs/$CHALLENGE_ID"
+
+      - name: Enforce the public PASS and privacy boundary
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          import json
+          import os
+          import re
+          from pathlib import Path
+
+          challenge_id = os.environ["CHALLENGE_ID"]
+          path = Path(os.environ["RUNNER_TEMP"]) / "dothat-anchor" / "proof.json"
+
+          def no_duplicates(pairs):
+              result = {}
+              for key, value in pairs:
+                  if key in result:
+                      raise ValueError(f"duplicate JSON key: {key}")
+                  result[key] = value
+              return result
+
+          package = json.loads(path.read_text(encoding="utf-8"), object_pairs_hook=no_duplicates)
+          expected = {
+              "package_version", "challenge_id", "verification_record",
+              "review_artifact", "provider_artifact", "trusted_key_registry",
+          }
+          if not isinstance(package, dict) or set(package) != expected:
+              raise SystemExit("Unexpected public proof package fields")
+          if package["package_version"] != "v1" or package["challenge_id"] != challenge_id:
+              raise SystemExit("Public proof package does not match the requested challenge")
+
+          record = package["verification_record"]
+          review = package["review_artifact"]
+          provider = package["provider_artifact"]
+          if record.get("challenge_id") != challenge_id or record.get("status") != "PASS":
+              raise SystemExit("Verification record is not a PASS for this challenge")
+          required_gates = {
+              "DISCOVERY_EVIDENCE", "TRANSACTION_EVIDENCE",
+              "EVIDENCE_INTEGRITY", "VERIFIED_AGENTIC_COMMERCE",
+          }
+          if set(record.get("result_summary", {})) != required_gates:
+              raise SystemExit("Verification record gates are incomplete")
+          if any(value != "PASS" for value in record["result_summary"].values()):
+              raise SystemExit("Every verification gate must be PASS")
+          if not re.fullmatch(r"[a-f0-9]{64}", record.get("hash", "")):
+              raise SystemExit("Verification record hash is invalid")
+
+          review_payload = review.get("payload", {})
+          review_flags = {
+              "prompt_integrity", "merchant_not_pre_supplied",
+              "destination_not_pre_supplied", "usable_chronological_trace",
+              "independent_reach",
+          }
+          if review.get("challenge_id") != challenge_id or review_payload.get("review_result") != "PASS":
+              raise SystemExit("Discovery review is not PASS for this challenge")
+          if any(review_payload.get(flag) is not True for flag in review_flags):
+              raise SystemExit("Discovery review predicates are incomplete")
+
+          provider_payload = provider.get("payload", {})
+          if provider.get("challenge_id") != challenge_id:
+              raise SystemExit("Provider artifact does not match this challenge")
+          if provider_payload.get("payment_status") != "PAID" or provider_payload.get("fulfillment_status") != "COMPLETED":
+              raise SystemExit("Provider artifact does not attest completed payment and fulfillment")
+          amount = provider_payload.get("amount_minor")
+          if type(amount) is not int or not 1 <= amount <= 100 or provider_payload.get("currency") != "EUR":
+              raise SystemExit("Provider amount is not a positive EUR payment within the limit")
+
+          forbidden_exact = {
+              "participant_id", "trace_utf8", "submission_token", "token",
+              "authorization", "card_number", "cvc", "cvv", "email",
+          }
+          forbidden_fragments = (
+              "credential", "private_key", "wallet_secret", "payment_token",
+              "api_key", "billing",
+          )
+          def check_keys(value):
+              if isinstance(value, dict):
+                  for key, child in value.items():
+                      lowered = key.lower()
+                      if lowered in forbidden_exact or any(fragment in lowered for fragment in forbidden_fragments):
+                          raise SystemExit(f"Forbidden private field in public proof: {key}")
+                      check_keys(child)
+              elif isinstance(value, list):
+                  for child in value:
+                      check_keys(child)
+          check_keys(package)
+
+          predicate = {
+              "schemaVersion": "v1",
+              "claim": "This exact public package was returned by dothat.quest as a finalized PASS and passed the public status and privacy checks in this workflow.",
+              "challengeId": challenge_id,
+              "verificationRecordHash": record["hash"],
+              "protocolVersion": record["protocol_version"],
+              "protocolHash": record["protocol_hash"],
+              "verifiedAt": record["verified_at"],
+              "source": f"https://api.dothat.quest/api/proofs/{challenge_id}",
+          }
+          predicate_path = path.with_name("predicate.json")
+          predicate_path.write_text(json.dumps(predicate, sort_keys=True, separators=(",", ":")), encoding="utf-8")
+          PY
+
+      - name: Stage the immutable public files
+        shell: bash
+        run: |
+          set -euo pipefail
+          destination="records/$CHALLENGE_ID"
+          mkdir -p "$destination"
+          cp "$RUNNER_TEMP/dothat-anchor/proof.json" "$destination/proof.json"
+          cp "$RUNNER_TEMP/dothat-anchor/predicate.json" "$destination/attestation-predicate.json"
+
+      - name: Sign and publish a Sigstore attestation
+        id: attest
+        uses: actions/attest@v4
+        with:
+          subject-path: records/${{ inputs.challenge_id }}/proof.json
+          predicate-type: https://dothat.quest/attestations/verified-agentic-commerce/v1
+          predicate-path: ${{ runner.temp }}/dothat-anchor/predicate.json
+
+      - name: Preserve the Sigstore bundle with the record
+        shell: bash
+        env:
+          ATTESTATION_URL: ${{ steps.attest.outputs.attestation-url }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          destination="records/$CHALLENGE_ID"
+          cp "$BUNDLE_PATH" "$destination/proof.sigstore.json"
+          cat > "$destination/README.md" <<EOF
+          # Finalized PASS: $CHALLENGE_ID
+
+          Verification record hash: \
+          \`$(python -c 'import json,os; print(json.load(open("records/" + os.environ["CHALLENGE_ID"] + "/proof.json", encoding="utf-8"))["verification_record"]["hash"])')\`
+
+          GitHub/Sigstore attestation: $ATTESTATION_URL
+
+          Verify the repository-linked attestation:
+
+          \`\`\`text
+          gh attestation verify records/$CHALLENGE_ID/proof.json -R NIKOMISHEV/101Ts3t --predicate-type "$PREDICATE_TYPE"
+          \`\`\`
+
+          The attestation proves the identity, time and exact bytes anchored by this
+          GitHub Actions workflow. The signed provider and review artifacts inside
+          the package remain the evidence for the underlying verification decision.
+          EOF
+
+      - name: Commit the anchored record
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "records/$CHALLENGE_ID"
+          git commit -m "Anchor finalized PASS $CHALLENGE_ID"
+          git pull --rebase origin main
+          git push origin HEAD:main
