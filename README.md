@@ -53,6 +53,9 @@ Created by **Nikola Mishev**. First announced in September 2026.
 ## Public proof and external timestamping
 
 The rules fixed before the invitation are in [TEST-SPECIFICATION.md](TEST-SPECIFICATION.md).
+They can be independently timestamped without asserting that a transaction has
+already happened; the resulting Sigstore bundle is preserved in
+[`attestations/`](attestations/) after the one-time workflow completes.
 After a real run receives a finalized `PASS`, an operator starts the public
 GitHub workflow with its Challenge ID. The workflow downloads the privacy-safe
 proof package from dothat.quest, rejects anything that is not a complete PASS,

@@ -1,0 +1,83 @@
+name: Attest the pre-event test specification
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: attest-101ts3t-test-specification
+  cancel-in-progress: false
+
+jobs:
+  attest:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the public record repository
+        uses: actions/checkout@v4
+
+      - name: Confirm this is the pre-event specification
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f TEST-SPECIFICATION.md
+          test ! -e attestations/test-specification.sigstore.json
+          grep -F 'This document fixes the public rules before the first invited test run.' TEST-SPECIFICATION.md >/dev/null
+          grep -F '784b7a229aa9d28dad6f08b53e2d322189e2a4265828640fd53548dc0e12a96f' TEST-SPECIFICATION.md >/dev/null
+          cat > "$RUNNER_TEMP/test-specification-predicate.json" <<'EOF'
+          {
+            "schemaVersion": "v1",
+            "purpose": "Pre-event publication of the fixed rules for the 101Ts3t public test.",
+            "assertsTransaction": false,
+            "assertsPass": false,
+            "protocolVersion": "v1.0-draft",
+            "protocolHash": "784b7a229aa9d28dad6f08b53e2d322189e2a4265828640fd53548dc0e12a96f"
+          }
+          EOF
+
+      - name: Sign and publish the pre-event Sigstore attestation
+        id: attest
+        uses: actions/attest@v4
+        with:
+          subject-path: TEST-SPECIFICATION.md
+          predicate-type: https://dothat.quest/attestations/test-specification/v1
+          predicate-path: ${{ runner.temp }}/test-specification-predicate.json
+
+      - name: Preserve the Sigstore bundle
+        shell: bash
+        env:
+          ATTESTATION_URL: ${{ steps.attest.outputs.attestation-url }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          mkdir attestations
+          cp "$BUNDLE_PATH" attestations/test-specification.sigstore.json
+          cat > attestations/README.md <<EOF
+          # Pre-event specification attestation
+
+          This Sigstore attestation fixes the public test rules before the first
+          invited transaction. It does not assert that a transaction or PASS has
+          already occurred.
+
+          GitHub/Sigstore attestation: $ATTESTATION_URL
+
+          Verify it with:
+
+          \`\`\`text
+          gh attestation verify TEST-SPECIFICATION.md -R NIKOMISHEV/101Ts3t --predicate-type https://dothat.quest/attestations/test-specification/v1
+          \`\`\`
+          EOF
+
+      - name: Commit the preserved bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add attestations
+          git commit -m "Preserve pre-event specification attestation"
+          git pull --rebase origin main
+          git push origin HEAD:main
