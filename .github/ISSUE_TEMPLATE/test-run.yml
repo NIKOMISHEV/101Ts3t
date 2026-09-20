@@ -15,6 +15,15 @@ body:
     validations:
       required: true
   - type: dropdown
+    id: run_type
+    attributes:
+      label: Run type
+      options:
+        - Real payment
+        - Discovery only — no payment
+    validations:
+      required: true
+  - type: dropdown
     id: status
     attributes:
       label: Status shown by dothat.quest
@@ -43,6 +52,6 @@ body:
       options:
         - label: I have not included raw traces, personal or payment data, credentials, tokens, private evidence or merchant hints.
           required: true
-        - label: The human operator authorized the real charge and enforced the EUR 1.00 maximum total price.
+        - label: If this was a commerce run, the human operator authorized a real positive charge and enforced the EUR 1.00 maximum total price; otherwise it is marked discovery-only.
           required: true
 

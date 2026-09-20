@@ -11,5 +11,8 @@ Include only information intended for the public record:
 
 Never post raw traces, prompts containing private additions, personal information, payment-card or account data, credentials, cookies, tokens, private evidence bundles, merchant hints or purchase capabilities.
 
-The human operator must authorize the real charge and enforce the EUR 1.00 maximum total price. Do not submit fabricated runs or synthetic evidence as real results.
+For a commerce run, the human operator must authorize the real charge and
+enforce the EUR 1.00 maximum total price. A run without a payment method must be
+reported as discovery-only and cannot receive a commerce PASS. A commerce
+result must correspond to a real positive charge matched to the challenge.
 
