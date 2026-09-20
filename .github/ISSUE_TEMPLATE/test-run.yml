@@ -1,0 +1,48 @@
+name: Report a test run
+description: Share a public dothat.quest result without exposing private evidence.
+title: "[TEST RUN] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Report only public information. Never include raw traces, payment data, credentials, tokens, private evidence or merchant hints.
+  - type: input
+    id: record
+    attributes:
+      label: Public record or Challenge ID
+      description: Add the public dothat.quest verification-record URL or the Challenge ID.
+      placeholder: https://dothat.quest/record?... or qst_...
+    validations:
+      required: true
+  - type: dropdown
+    id: status
+    attributes:
+      label: Status shown by dothat.quest
+      options:
+        - PASS
+        - FAIL
+        - NOT_VERIFIED
+        - PENDING
+        - No public record yet
+    validations:
+      required: true
+  - type: input
+    id: agent
+    attributes:
+      label: Agent or framework
+      description: Optional. Name and version only; do not include credentials or private configuration.
+  - type: textarea
+    id: notes
+    attributes:
+      label: Public notes
+      description: Optional. Describe what happened without disclosing private evidence or a merchant destination.
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I have not included raw traces, personal or payment data, credentials, tokens, private evidence or merchant hints.
+          required: true
+        - label: The human operator authorized the real charge and enforced the EUR 1.00 maximum total price.
+          required: true
+
