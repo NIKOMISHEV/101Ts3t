@@ -1,0 +1,6 @@
+{
+  "assertsPass": false,
+  "assertsTransaction": false,
+  "purpose": "Pre-event commitment to route rules, public trust, verifier and workflows",
+  "release": "route-v1"
+}
