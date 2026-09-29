@@ -1,0 +1,23 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dothat.quest/api/schemas/public-proof-package-v1.schema.json",
+  "title": "Public Verification Proof Package V1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "package_version",
+    "challenge_id",
+    "verification_record",
+    "review_artifact",
+    "provider_artifact",
+    "trusted_key_registry"
+  ],
+  "properties": {
+    "package_version": {"const": "v1"},
+    "challenge_id": {"type": "string", "pattern": "^qst_[a-f0-9]{32}$"},
+    "verification_record": {"type": "object"},
+    "review_artifact": {"type": "object"},
+    "provider_artifact": {"type": "object"},
+    "trusted_key_registry": {"type": "object"}
+  }
+}

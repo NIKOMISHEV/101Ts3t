@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dothat.quest/protocol/v2/schemas/trusted-key-registry-v2.schema.json",
+  "title": "Trusted Key Registry V2",
+  "description": "Runtime also enforces unique key IDs and unique physical key material, canonical base64, and semantic timestamp ordering. One physical key has one immutable ID; review and provider roles therefore use distinct keys. Revoked keys invalidate all signatures; retired keys retain historical validity before retired_at.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["registry_version", "keys"],
+  "properties": {
+    "registry_version": {"const": "v2"},
+    "keys": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["key_id", "purpose", "status", "active_at", "public_key"],
+        "properties": {
+          "key_id": {"type": "string", "minLength": 1, "pattern": "\\S"},
+          "purpose": {"enum": ["discovery-review", "provider-transaction"]},
+          "status": {"enum": ["active", "retired", "revoked"]},
+          "active_at": {"type": "string", "format": "date-time"},
+          "retired_at": {"type": "string", "format": "date-time"},
+          "revoked_at": {"type": "string", "format": "date-time"},
+          "public_key": {"type": "string", "pattern": "^[A-Za-z0-9+/]{43}=$"}
+        },
+        "allOf": [
+          {"if": {"properties": {"status": {"const": "active"}}}, "then": {"not": {"anyOf": [{"required": ["retired_at"]}, {"required": ["revoked_at"]}]}}},
+          {"if": {"properties": {"status": {"const": "retired"}}}, "then": {"required": ["retired_at"], "not": {"required": ["revoked_at"]}}}
+        ]
+      }
+    }
+  }
+}

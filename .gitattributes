@@ -1,0 +1,3 @@
+# This evidence repository preserves the exact bytes used by SHA-256/Sigstore.
+# Do not rewrite line endings on checkout or commit, including on Windows.
+* -text

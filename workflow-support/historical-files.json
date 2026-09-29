@@ -1,0 +1,15 @@
+{
+  "files": {
+    ".github/workflows/anchor-pass.yml": "80f8d2632ac56a68b50057f7a663531e7e3b8dfaca15e0c25ee24419802d0416",
+    ".github/workflows/attest-specification.yml": "46f3432b19237da6487b9292d0ea47b31ded28b319c9f5f7275becff12709551",
+    "TEST-SPECIFICATION.md": "c5976fd1200e51b1decbb7c6d3f6b258919e1dbd615f8854cd85e81618c7ca9e",
+    "attestations/README.md": "6cf49572773b806c4bae0491a3b5e831d9f1e98151bae116dc3230df11647cb6",
+    "attestations/test-specification.sigstore.json": "2b415050a4eded1ca41a4f409146126d2e6e092247a432acbbdee6a6002d7e61",
+    "records/README.md": "90c9439ba8dc29932ffc2dab110969616e99cb14f0efc1bbe2098dfc0ce2dd6c",
+    "records/qst_44e153fc16fe3fa91520e5f6922ae4c9/README.md": "c962045db1affd24a2e37939476874e05b80f9c682ebbf647691b705140f39be",
+    "records/qst_44e153fc16fe3fa91520e5f6922ae4c9/attestation-predicate.json": "74a488e07360b55c68e335b335395d6b12e132e658b66a70e5fd95e427ac7283",
+    "records/qst_44e153fc16fe3fa91520e5f6922ae4c9/proof.json": "c032d43de422161baaf10857a03e9870112f3aa5cae8cd73ed026462c165a16a",
+    "records/qst_44e153fc16fe3fa91520e5f6922ae4c9/proof.sigstore.json": "357387fe9a78fbf1b3582531fdd7bdd92f626ac6e986ba94a4d7b7b82cee0926"
+  },
+  "source_revision": "65a6ebaae2bbdd5bcea86399cc44552bc26b5638"
+}
