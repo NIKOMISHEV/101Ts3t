@@ -69,3 +69,24 @@ The workflow never creates an order or initiates a payment. It can only record a
 PASS that the production verifier has already finalized. Future anchored
 packages appear in [records/](records/).
 
+## Optional route qualification for a new test
+
+The later [route-v1 release](route-v1/README.md) adds offline verification of
+separately signed protocol-route and domain-control KYA evidence. Its
+[specification](route-v1/SPECIFICATION.md), pinned public keys, verifier and
+workflows are committed together by the **Freeze route-v1 before a new
+purchase** workflow. Complete that pre-event attestation before a new test.
+
+After a new purchase has a public base PASS and matching signed route evidence,
+the **Verify and anchor a new route-qualified purchase** workflow independently
+replays the signatures, bindings and payment chronology. Successful packages
+are published under `route-records/`. The workflow does not issue a challenge
+or perform a payment. A protocol-specific result does not establish native
+Google or OpenAI checkout approval.
+
+The original specification, workflows, September 21 proof and Sigstore bundles
+remain unchanged. That earlier successful purchase is not reclassified as a
+new route test. [Zenodo version 1.4](https://zenodo.org/records/23038829)
+(DOI `10.5281/zenodo.23038829`) documents the implementation updates; new
+production evidence is intended for a later version 1.5 after the tests occur.
+

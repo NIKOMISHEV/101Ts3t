@@ -1,0 +1,7 @@
+__pycache__/
+*.py[cod]
+.venv/
+pip-build-tracker-*/
+pip-ephem-wheel-cache-*/
+pip-install-*/
+pip-unpack-*/

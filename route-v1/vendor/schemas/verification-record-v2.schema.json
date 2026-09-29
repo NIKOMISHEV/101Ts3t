@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Verification Record V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "challenge_id",
+    "protocol_version",
+    "verifier_version",
+    "policy_version",
+    "verified_at",
+    "status",
+    "result_summary",
+    "challenge_context_hash",
+    "protocol_hash",
+    "prompt_hash",
+    "participant_evidence_hash",
+    "agent_evidence_hash",
+    "trace_hash",
+    "transaction_evidence_hash",
+    "registry_hash",
+    "hash",
+    "review_envelope_hash",
+    "provider_envelope_hash",
+    "previous_record_hash"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v2"
+    },
+    "challenge_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "protocol_version": {
+      "const": "v1.0-draft"
+    },
+    "verifier_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "verified_at": {
+      "type": "string",
+      "format": "date-time"
+    },
+    "status": {
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_VERIFIED"
+      ]
+    },
+    "result_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "DISCOVERY_EVIDENCE",
+        "TRANSACTION_EVIDENCE",
+        "EVIDENCE_INTEGRITY",
+        "VERIFIED_AGENTIC_COMMERCE"
+      ],
+      "properties": {
+        "DISCOVERY_EVIDENCE": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_VERIFIED"
+          ]
+        },
+        "TRANSACTION_EVIDENCE": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_VERIFIED"
+          ]
+        },
+        "EVIDENCE_INTEGRITY": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_VERIFIED"
+          ]
+        },
+        "VERIFIED_AGENTIC_COMMERCE": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_VERIFIED"
+          ]
+        }
+      }
+    },
+    "challenge_context_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "protocol_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "prompt_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "participant_evidence_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "agent_evidence_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "trace_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "transaction_evidence_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "registry_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "review_envelope_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "provider_envelope_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "previous_record_hash": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    }
+  },
+  "$id": "https://dothat.quest/protocol/v2/schemas/verification-record-v2.schema.json"
+}
