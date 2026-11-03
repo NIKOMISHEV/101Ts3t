@@ -28,6 +28,12 @@ class PublishTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             publish.manifest("fax", SHA)
 
+    def test_attestations_are_checked_against_the_v2_workflows_only(self):
+        source = (Path(publish.__file__)).read_text(encoding="utf-8")
+        import re
+        named = set(re.findall(r'"(channel[a-z0-9-]*\.yml)"', source))
+        self.assertEqual(named, set(publish.WORKFLOWS))
+
     def test_only_transparency_log_time_from_gh_verification_counts(self):
         statement = {"predicateType": publish.LAYER_TYPE, "subject": [{"digest": {"sha256": "d" * 64}}]}
         good = [{"verificationResult": {"statement": statement, "verifiedTimestamps": [

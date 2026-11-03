@@ -119,7 +119,7 @@ def verify_attestation(subject, bundle, workflow, predicate_type, source_revisio
 def authenticate_layer(channel):
     frozen = check_manifest(channel)
     freeze = layer(channel) / "freeze"
-    time = verify_attestation(freeze / "manifest.json", freeze / "manifest.sigstore.json", "channel-freeze.yml",
+    time = verify_attestation(freeze / "manifest.json", freeze / "manifest.sigstore.json", "channel-v2-freeze.yml",
                               LAYER_TYPE, frozen["source_revision"])
     return {"channel": channel, "manifest_sha256": digest((freeze / "manifest.json").read_bytes()),
             "attested_at": time, "source_revision": frozen["source_revision"]}
@@ -270,7 +270,7 @@ def preserve_run():
     destination = layer(channel) / "runs" / challenge
     write_new(destination / "manifest.sigstore.json", Path(os.environ["BUNDLE_PATH"]).read_bytes())
     attested_at = verify_attestation(destination / "manifest.json", destination / "manifest.sigstore.json",
-                                    "channel-record.yml", RUN_TYPE, os.environ["GITHUB_SHA"])
+                                    "channel-v2-record.yml", RUN_TYPE, os.environ["GITHUB_SHA"])
     verification = load(destination / "verification.json")
     write_new(destination / "README.md", (
         "# " + channel + " run " + challenge + "\n\n"
