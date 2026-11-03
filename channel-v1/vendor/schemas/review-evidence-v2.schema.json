@@ -1,0 +1,137 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://dothat.quest/protocol/v2/schemas/review-evidence-v2.schema.json",
+  "title": "Signed Review Evidence V2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "artifact_type",
+    "schema_version",
+    "challenge_id",
+    "issued_at",
+    "signing_key_id",
+    "signature_algorithm",
+    "payload_hash",
+    "payload",
+    "signature"
+  ],
+  "properties": {
+    "artifact_type": {
+      "const": "discovery-review"
+    },
+    "schema_version": {
+      "const": "v2"
+    },
+    "challenge_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "issued_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$",
+      "format": "date-time"
+    },
+    "signing_key_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "signature_algorithm": {
+      "const": "Ed25519"
+    },
+    "payload_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "payload": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "challenge_id",
+        "exact_prompt_hash",
+        "trace_hash",
+        "protocol_hash",
+        "reviewer_verifier_version",
+        "reviewed_at",
+        "prompt_integrity",
+        "merchant_not_pre_supplied",
+        "destination_not_pre_supplied",
+        "usable_chronological_trace",
+        "independent_reach",
+        "review_result",
+        "challenge_context_hash",
+        "participant_evidence_hash",
+        "agent_evidence_hash",
+        "provider_payload_hash"
+      ],
+      "properties": {
+        "challenge_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "exact_prompt_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "trace_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "protocol_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "reviewer_verifier_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewed_at": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$",
+          "format": "date-time"
+        },
+        "prompt_integrity": {
+          "type": "boolean"
+        },
+        "merchant_not_pre_supplied": {
+          "type": "boolean"
+        },
+        "destination_not_pre_supplied": {
+          "type": "boolean"
+        },
+        "usable_chronological_trace": {
+          "type": "boolean"
+        },
+        "independent_reach": {
+          "type": "boolean"
+        },
+        "review_result": {
+          "enum": [
+            "PASS",
+            "FAIL",
+            "NOT_VERIFIED"
+          ]
+        },
+        "challenge_context_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "participant_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "agent_evidence_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "provider_payload_hash": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        }
+      }
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9+/]{86}==$"
+    }
+  }
+}

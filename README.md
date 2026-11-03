@@ -78,6 +78,13 @@ setup of the agent differs. The operator cards are in
 [channels/CHANNELS.md](channels/CHANNELS.md) and are attested with Sigstore
 before the first channel test. **Do not give the cards to the agent.**
 
+Each channel has its own evidence layer under [channels/](channels/README.md):
+its rules, its own Sigstore commitment made before its first test, and a record
+for every ended run, successful or not. The operator declares the channel when
+issuing the challenge; it never enters the prompt and stays hidden behind an
+independently timestamped commitment until the run ends. Offline replay:
+[channel-v1](channel-v1/README.md).
+
 ## Optional route qualification for a new test
 
 The later [route-v1 release](route-v1/README.md) adds offline verification of

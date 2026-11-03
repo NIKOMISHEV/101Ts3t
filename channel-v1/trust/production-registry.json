@@ -1,0 +1,27 @@
+{
+  "registry_version": "v2",
+  "keys": [
+    {
+      "key_id": "branddesign-provider-2026-09",
+      "purpose": "provider-transaction",
+      "status": "active",
+      "active_at": "2026-09-20T07:25:46.424Z",
+      "public_key": "Y0DPFhEmqXYBS+yQVVPG7XyYFiN24beyoKoedq8owiI="
+    },
+    {
+      "key_id": "dothat-reviewer-2026-09",
+      "purpose": "discovery-review",
+      "status": "retired",
+      "active_at": "2026-09-20T10:56:43Z",
+      "public_key": "TGzgPV4gjVdz+Nt5zbeQEnOoAyVEhjFmoXtGdx+58x8=",
+      "retired_at": "2026-09-21T15:22:16Z"
+    },
+    {
+      "key_id": "dothat-reviewer-2026-09-r2",
+      "purpose": "discovery-review",
+      "status": "active",
+      "active_at": "2026-09-21T15:22:16Z",
+      "public_key": "cfYCi5NJhrJFtms9Ucs1hsHhRII1eIrxv1EGPOjmlo4="
+    }
+  ]
+}

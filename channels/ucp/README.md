@@ -1,0 +1,44 @@
+# Channel layer: UCP platform
+
+This folder is the separate evidence layer for the **ucp** channel. It holds
+the rules below, their own pre-event Sigstore commitment (`freeze/`) and one
+record for every ended run declared for this channel (`runs/<challenge>/`),
+successful or not.
+
+Operator setup: card 4 in [CHANNELS.md](https://github.com/NIKOMISHEV/101Ts3t/blob/main/channels/CHANNELS.md). Never give it to the agent.
+
+## What a PASS in this layer proves
+
+The order and the payment both used one version of the Universal Commerce Protocol, from a platform the seller approved before the run.
+
+The seller signs these facts for the same paid purchase in a separate artifact,
+`bd-commerce-channel/1`, bound to the original payment artifact:
+
+| Signed fact | Required value |
+|---|---|
+| Protocol at order and at payment | ucp/2026-08-25 or ucp/2026-04-08 (the same version at order and payment) |
+| Transport at order | `http` |
+| Transport at payment | `http` |
+| Payment | A Stripe shared payment token, and a payer identity the seller recorded: a DNS domain-control check (KYA) no more than 24 hours before payment started, or a platform the seller approved before the run and verified by its signed requests. |
+
+The run must also be a base PASS of the original test (independent discovery,
+a real positive payment within EUR 1.00 and completed fulfilment).
+
+## The declaration
+
+The operator declares **ucp** when issuing the challenge on
+[dothat.quest](https://dothat.quest/start). The channel never enters the prompt.
+While the run is open only a commitment is public, timestamped by an independent
+RFC 3161 authority. After the run the channel and salt are published and the
+commitment can be recomputed. A PASS needs that timestamp within five minutes of
+issuance and before payment started, and an issuance after this layer was fixed.
+
+## Results
+
+- **PASS**: everything above holds.
+- **NOT_VERIFIED**: valid evidence that does not prove this channel, or a run
+  without a base PASS. It is recorded like any other run.
+- **FAIL**: forged, unbound or malformed evidence.
+
+Live list of ended runs: `https://api.dothat.quest/api/channels/ucp/runs`.
+Rules for every channel: [channel-v1/SPECIFICATION.md](../../channel-v1/SPECIFICATION.md).

@@ -1,0 +1,102 @@
+{
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "challenge_id",
+    "service",
+    "participant_id",
+    "status",
+    "exact_prompt",
+    "agent_platform",
+    "participant_attestation",
+    "trace_export_share_reference",
+    "trace_hash",
+    "transaction_order_reference",
+    "submitted_at",
+    "hash"
+  ],
+  "properties": {
+    "challenge_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "service": {
+      "type": "string",
+      "const": "101Ts3t"
+    },
+    "participant_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "PASS",
+        "FAIL",
+        "NOT_VERIFIED",
+        "NOT_AVAILABLE",
+        "CLIENT_ASSERTED"
+      ]
+    },
+    "exact_prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "agent_platform": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "participant_attestation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "merchant_not_supplied",
+        "destination_not_supplied",
+        "no_manual_steering",
+        "evidence_not_fabricated"
+      ],
+      "properties": {
+        "merchant_not_supplied": {
+          "const": true
+        },
+        "destination_not_supplied": {
+          "const": true
+        },
+        "no_manual_steering": {
+          "const": true
+        },
+        "evidence_not_fabricated": {
+          "const": true
+        }
+      }
+    },
+    "trace_export_share_reference": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "trace_hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "transaction_order_reference": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "\\S"
+    },
+    "submitted_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}(?:\\.\\d+)?(?:Z|[+-]\\d{2}:\\d{2})$",
+      "format": "date-time"
+    },
+    "hash": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    }
+  },
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Participant Evidence V2",
+  "$id": "https://dothat.quest/protocol/v2/schemas/participant-evidence-v2.schema.json"
+}
