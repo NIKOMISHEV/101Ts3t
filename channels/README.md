@@ -1,5 +1,9 @@
 # Payment channel evidence layers
 
+> New channel tests since 3 November 2026 give the agent the prompt of the chosen channel and are
+> recorded in [channels-v2](../channels-v2/README.md). The channel-v1 layers below stay unchanged
+> for runs issued with the neutral prompt.
+
 Each payment channel has its own evidence layer: its rules, its own Sigstore
 commitment made before the first channel test, and one record for every ended
 run declared for it, successful or not.

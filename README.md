@@ -71,19 +71,20 @@ packages appear in [records/](records/).
 
 ## Payment channels for new tests
 
-New purchases can be prepared for different payment channels: MCP, a direct
-HTTP API, ACP, UCP, agent-to-agent (A2A) and browser checkout. The prompt stays
-the same neutral, server-issued prompt for every channel; only the operator's
-setup of the agent differs. The operator cards are in
-[channels/CHANNELS.md](channels/CHANNELS.md) and are attested with Sigstore
-before the first channel test. **Do not give the cards to the agent.**
+New purchases can be tested on different payment channels: MCP, a direct HTTP
+API, ACP, UCP, agent-to-agent (A2A) and browser checkout. Since 3 November 2026
+the operator chooses the channel on dothat.quest/start and the server issues
+the prompt of that channel: the unchanged prompt plus one paragraph that names
+the payment channel, never the seller, a website, a URL, a server or a link.
+The operator cards in [channels/CHANNELS.md](channels/CHANNELS.md) say how to
+prepare the agent (wallet, domain); they are attested with Sigstore.
 
-Each channel has its own evidence layer under [channels/](channels/README.md):
-its rules, its own Sigstore commitment made before its first test, and a record
-for every ended run, successful or not. The operator declares the channel when
-issuing the challenge; it never enters the prompt and stays hidden behind an
-independently timestamped commitment until the run ends. Offline replay:
-[channel-v1](channel-v1/README.md).
+Each channel has its own evidence layer under [channels-v2/](channels-v2/README.md):
+its rules and prompt, its own Sigstore commitment made before its first test,
+and a record for every ended run, successful or not. The channel is also
+committed at issuance with an independent RFC 3161 timestamp. Offline replay:
+[channel-v2](channel-v2/README.md). Earlier runs with the neutral prompt stay
+in [channels/](channels/README.md) ([channel-v1](channel-v1/README.md)).
 
 ## Optional route qualification for a new test
 
