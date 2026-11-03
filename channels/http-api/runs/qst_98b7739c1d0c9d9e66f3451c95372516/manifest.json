@@ -1,0 +1,16 @@
+{
+  "challenge_id": "qst_98b7739c1d0c9d9e66f3451c95372516",
+  "channel": "http-api",
+  "files": {
+    "channel-result.json": "33c2d8fbfe8958f9cd2e4016817356749d5969633ccec160b2fcda530ed75c35",
+    "channel.json": "832ff233cdbb5c0785f02713a0eda755427c151a2b0afe7f136b2b1a83e85092",
+    "commitment.json": "b93981078aac024f46e3c408dbe3130da4a200497deac8b95a9d41a5a3094cce",
+    "declaration-timestamp.tsr": "63a26459c70d32f6a43a6778c1d76db53776fd487b8e48fffbe285a7fdd42c01",
+    "declaration.json": "bf6ed5465c8acfb74115d674c9128f0048a357cce04a2423a3b31c92e57c3dd0",
+    "proof.json": "2d426b59ac159836b802dde284886b5e027f4a8894ebdbca9d93613f73ae6b76",
+    "verification.json": "e49b246f81df0e7514aa31f045c8f8bee2e521bb615c11bc6a33473f8e75ec5b"
+  },
+  "release": "channel-v1",
+  "source_revision": "e7bdd08689cdcc2a63ce600da0413c3b27852141",
+  "status": "NOT_VERIFIED"
+}

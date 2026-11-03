@@ -1,0 +1,27 @@
+{
+  "base_status": "PASS",
+  "challenge_id": "qst_98b7739c1d0c9d9e66f3451c95372516",
+  "channel_sha256": "832ff233cdbb5c0785f02713a0eda755427c151a2b0afe7f136b2b1a83e85092",
+  "declaration_commitment": "ef4863aa41eb532d64149da3e0dc0001f1f4d5ef54be7ae4068e68e7116d2f82",
+  "declaration_sha256": "bf6ed5465c8acfb74115d674c9128f0048a357cce04a2423a3b31c92e57c3dd0",
+  "declaration_timestamp": "2026-11-03T12:01:27Z",
+  "declared_at": "2026-11-03T12:01:27Z",
+  "declared_channel": "http-api",
+  "layer_attested_at": "2026-11-03T10:19:45Z",
+  "layer_sha256": "dfb9c3ad0f931cb9b69c47135583e10ca74723adda9a6e27245e4d01395e75d7",
+  "proof_sha256": "2d426b59ac159836b802dde284886b5e027f4a8894ebdbca9d93613f73ae6b76",
+  "reason": "Autonomous payment and current KYA were not both attested",
+  "recorded": {
+    "entry_protocol": "bd-commerce/1",
+    "entry_transport": "http",
+    "kya_level": "not-recorded",
+    "payment_instrument": "hosted-checkout",
+    "payment_protocol": "bd-commerce/1",
+    "payment_transport": "http"
+  },
+  "recorded_channel": "http-api",
+  "registry_hash": "c4c6f5c1bd4989f699645e5112d950148ac10ed50d53dd3862793ed4a8c131e4",
+  "release": "channel-v1",
+  "status": "NOT_VERIFIED",
+  "verification_record_hash": "3cf9f7a9d88fef4a1ceae42cc20cea4d23745df135dcb645c0040c805dfaf399"
+}

@@ -1,0 +1,14 @@
+{
+  "assertsPass": false,
+  "challenge_id": "qst_98b7739c1d0c9d9e66f3451c95372516",
+  "channel": "http-api",
+  "doesNotAssert": [
+    "Native platform approval",
+    "Universal agent compatibility",
+    "Private trace reproduced publicly"
+  ],
+  "reason": "Autonomous payment and current KYA were not both attested",
+  "release": "channel-v1",
+  "scope": "Declared channel, its RFC 3161 timestamp and the seller-signed channel evidence, replayed offline",
+  "status": "NOT_VERIFIED"
+}
