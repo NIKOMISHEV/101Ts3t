@@ -69,6 +69,15 @@ The workflow never creates an order or initiates a payment. It can only record a
 PASS that the production verifier has already finalized. Future anchored
 packages appear in [records/](records/).
 
+## Payment channels for new tests
+
+New purchases can be prepared for different payment channels: MCP, a direct
+HTTP API, ACP, UCP, agent-to-agent (A2A) and browser checkout. The prompt stays
+the same neutral, server-issued prompt for every channel; only the operator's
+setup of the agent differs. The operator cards are in
+[channels/CHANNELS.md](channels/CHANNELS.md) and are attested with Sigstore
+before the first channel test. **Do not give the cards to the agent.**
+
 ## Optional route qualification for a new test
 
 The later [route-v1 release](route-v1/README.md) adds offline verification of

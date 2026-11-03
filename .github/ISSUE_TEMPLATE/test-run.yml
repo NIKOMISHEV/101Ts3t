@@ -35,6 +35,21 @@ body:
         - No public record yet
     validations:
       required: true
+  - type: dropdown
+    id: channel
+    attributes:
+      label: Channel card used
+      description: The card from channels/CHANNELS.md that the operator followed. It was never given to the agent.
+      options:
+        - 1. MCP agent
+        - 2. Direct HTTP API agent
+        - 3. ACP agent
+        - 4. UCP platform
+        - 5. Agent-to-agent (A2A) agent
+        - 6. Browser checkout agent
+        - No channel card (original test)
+    validations:
+      required: true
   - type: input
     id: agent
     attributes:

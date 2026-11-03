@@ -1,0 +1,87 @@
+name: Attest the channel cards before the channel tests
+
+on:
+  workflow_dispatch:
+
+concurrency:
+  group: attest-101ts3t-channel-cards
+  cancel-in-progress: false
+
+permissions: {}
+
+jobs:
+  attest:
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      id-token: write
+      attestations: write
+    steps:
+      - name: Check out the public record repository
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+
+      - name: Confirm these are the pre-event channel cards
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -f channels/CHANNELS.md
+          test ! -e channels/attestations/channels.sigstore.json
+          grep -F 'This document fixes, before the channel tests, how a test operator prepares an' channels/CHANNELS.md >/dev/null
+          grep -F '**Do not give them to' channels/CHANNELS.md >/dev/null
+          cat > "$RUNNER_TEMP/channels-predicate.json" <<'EOF'
+          {
+            "schemaVersion": "v1",
+            "purpose": "Pre-event publication of the operator channel cards for new 101Ts3t purchases.",
+            "assertsTransaction": false,
+            "assertsPass": false,
+            "promptChanged": false,
+            "protocolVersion": "v1.0-draft",
+            "protocolHash": "784b7a229aa9d28dad6f08b53e2d322189e2a4265828640fd53548dc0e12a96f",
+            "routeProtocols": ["bd-commerce/1", "acp/2026-04-17", "ucp/2026-08-25", "ucp/2026-04-08"]
+          }
+          EOF
+
+      - name: Sign and publish the pre-event Sigstore attestation
+        id: attest
+        uses: actions/attest@1e69f48acb82d1966a394da916b4c1698aa569d6 # v4
+        with:
+          subject-path: channels/CHANNELS.md
+          predicate-type: https://dothat.quest/attestations/channel-cards/v1
+          predicate-path: ${{ runner.temp }}/channels-predicate.json
+
+      - name: Preserve the Sigstore bundle
+        shell: bash
+        env:
+          ATTESTATION_URL: ${{ steps.attest.outputs.attestation-url }}
+          BUNDLE_PATH: ${{ steps.attest.outputs.bundle-path }}
+        run: |
+          set -euo pipefail
+          mkdir -p channels/attestations
+          cp "$BUNDLE_PATH" channels/attestations/channels.sigstore.json
+          cat > channels/attestations/README.md <<EOF
+          # Pre-event channel cards attestation
+
+          This Sigstore attestation fixes the operator channel cards before the
+          first channel test. It does not assert that a transaction or PASS has
+          already occurred, and it does not change the agent prompt.
+
+          GitHub/Sigstore attestation: $ATTESTATION_URL
+
+          Verify it with:
+
+          \`\`\`text
+          gh attestation verify channels/CHANNELS.md -R NIKOMISHEV/101Ts3t --predicate-type https://dothat.quest/attestations/channel-cards/v1
+          \`\`\`
+          EOF
+
+      - name: Commit the preserved bundle
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add channels/attestations
+          git commit -m "Preserve pre-event channel cards attestation"
+          git pull --rebase origin main
+          git push origin HEAD:main

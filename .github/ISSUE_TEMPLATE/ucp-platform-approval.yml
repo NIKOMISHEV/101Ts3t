@@ -1,0 +1,32 @@
+name: UCP platform approval
+description: Ask for your UCP platform to be approved before a UCP channel test (channel card 4).
+title: "[UCP PLATFORM] "
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Send this before you issue the challenge. Never give this request or its reply to the agent. Do not include credentials, keys or private evidence.
+  - type: input
+    id: profile
+    attributes:
+      label: Platform profile URL
+      description: The HTTPS URL of the UCP platform profile your platform publishes and uses to sign its requests.
+      placeholder: https://platform.example/.well-known/ucp
+    validations:
+      required: true
+  - type: dropdown
+    id: version
+    attributes:
+      label: UCP version
+      options:
+        - 2026-08-25
+        - 2026-04-08
+    validations:
+      required: true
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: The agent under test will receive only the exact server-issued prompt; this request and its reply stay with the human operator.
+          required: true
