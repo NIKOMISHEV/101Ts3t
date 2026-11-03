@@ -1,0 +1,7 @@
+{
+  "assertsPass": false,
+  "assertsTransaction": false,
+  "channel": "a2a",
+  "purpose": "Pre-event commitment to the rules, verifier, trust and workflows of one channel layer",
+  "release": "channel-v2"
+}
