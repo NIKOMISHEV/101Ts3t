@@ -1,0 +1,7 @@
+{
+  "assertsPass": false,
+  "assertsTransaction": false,
+  "channel": "acp",
+  "purpose": "Pre-event commitment to the rules, verifier, trust and workflows of one channel layer",
+  "release": "channel-v1"
+}
